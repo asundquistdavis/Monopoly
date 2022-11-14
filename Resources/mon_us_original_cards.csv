@@ -1,0 +1,33 @@
+description,deck,function,value_1,value_2,flag
+Advance to Bordwalk,ch,move,39,Boardwalk,None
+Advance to Go (collect $200),ch,move,0,Go,g
+Advance to Illinois Ave (collect $200),ch,move,23,Illinois Ave,g
+Advance to St. Charles Place (collect $200),ch,move,11,St. Charles Place,g
+Advance to the nearest Railroad,ch,move,"5, 15, 25, 35","Reading Railroad, Penslyvania Railroad, B & O Railroad, Short Line",d
+Advance to the nearest Railroad,ch,move,"5, 15, 25, 35","Reading Railroad, Penslyvania Railroad, B & O Railroad, Short Line",d
+Advance to the nearest Utility,ch,move,"12, 28","Electric Company, Water Works",t
+Bank pays you dividend of $50,ch,money,50,None,None
+Get out of jail free,ch,gojf,None,None,None
+Go Back 3 spaces,ch,move,-3,None,r
+Go to jail,ch,move,30,None,None
+Make general repairs. Pay $25/house and $100/hotel,ch,money,-25,-100,b
+Speeding fine $15,ch,money,-15,None,None
+take a trip on the Reading Railroad (collect $200),ch,move,5,Reading Railroad,g
+You have been elected Chairman of the Board pay $50/player,ch,money,-50,None,p
+Your building loan matures collect $150,ch,money,150,None,None
+Advance to Go (collect $200),cc,move,0,None,g
+Bank error in your favor collect $200,cc,money,200,None,None
+Doctor's fee pay $50,cc,money,-50,None,None
+From sale of stock you get $50,cc,money,50,None,None
+Get out of jail free,cc,gojf,None,None,None
+Go to jail,cc,move,30,None,None
+Holiday fund matures receive $100,cc,money,100,None,None
+Income tax refund collect $20,cc,money,20,None,None
+It is your birthday collect $10/player,cc,money,10,None,p
+Life insurance matures collect $100,cc,money,100,None,None
+Pay hospital fees of $100,cc,money,-100,None,None
+Pay school fees of $50,cc,money,-50,None,None
+Receive $25 consultancy fee,cc,money,25,None,None
+You are assessed for street repair pay $40/house and $115/hotel,cc,money,-40,-115,b
+You have won second prize in a beauty constest collect $10,cc,money,10,None,None
+You inherit $100,cc,money,100,None,None
