@@ -26,7 +26,7 @@ class Game():
             file.readline()
             for row in csv.reader(file):
                 # print(row)
-                card = Card(*row[:5])
+                card = Card(*row)
                 if row[1] == 'cc':
                     self.cc_cards.append(card)
                 else:
@@ -44,7 +44,7 @@ class Game():
     def property_at(self, position):
         return list(filter(lambda property: property.position == position, self.properties))[0]
 
-    def play__full_turn(self):
+    def play_round(self):
         for player in self.players:
             player.play_turn()
             
@@ -53,7 +53,7 @@ class Game():
         die = [1, 2, 3, 4, 5, 6]
         die_1 = r.choice(die)
         die_2 = r.choice(die)
-        print(f"{'Doubles!' if die_1 == die_2 else ''}Rolled: {die_1} and {die_2}")
+        print(f"{'Doubles! ' if die_1 == die_2 else ''}Rolled: {die_1} and {die_2}")
         return (die_1+die_2, die_1==die_2)
 
     def purchase(self, property):
@@ -61,7 +61,11 @@ class Game():
         pass
 
     def property_named(self, property_name):
-        return list(filter(lambda property: property.postion == property_name, self.properties))[0]
+        properties = list(filter(lambda property: property.name == property_name, self.properties))
+        if len(properties) > 0:
+            return properties[0]
+        else:
+            return None
 
 class Player():
 
@@ -86,8 +90,8 @@ class Player():
         for property in self.properties:
             print(f'{property.name} for {property.price/2}')
         property_name = input()
-        if property_name in [property.name for property in self.properties]:
-            property = Game.property_named(property_name)
+        if str(property_name) in [str(property.name) for property in self.properties]:
+            property = self.game.property_named(property_name)
             property.mrtg = True
             self. exchange_money(property.price/2)
             return 'mrtg'
@@ -112,9 +116,9 @@ class Player():
         # self looses/gains 'amount' of money if amount is (-)/(+)
         # 'player' gains/looses 'amount' of money if amount is (-)/(+)
         # if source is None money goes to bank 
-        self.money += amount
+        self.money += int(amount)
         if player != None:
-            player.money -= amount
+            player.money -= int(amount)
 
     def draw(self, deck):
         # draw card from deck: either 'ch' or 'cc'
@@ -125,7 +129,7 @@ class Player():
         print(card.description)
         if card.function == 'move':
             if card.flag in ['d', 't']:
-                value = min((x - self.position) % 40 for x in list(card.value_1))
+                value = min((x - int(self.position)) % 40 for x in list(card.value_1))
             else:
                 value = int(card.value_1)
             self.move(value, relative=(True if card.flag=='r' else False), collect_on_go=(True if card.flag=='g' else False))
@@ -137,7 +141,7 @@ class Player():
                     value = card.value_1
                     self.exchange_money(value, player=player)
             elif card.flag == 'b':
-                value = card.value_1*self.houses + card.value_2*self.hotels
+                value = int(card.value_1)*self.houses + int(card.value_2)*self.hotels
             else:
                 value = card.value_1
             self.exchange_money(value)
@@ -148,7 +152,7 @@ class Player():
 
     def play_turn(self):
         # roll dice
-        roll = self.roll()
+        roll = self.game.roll()
         if self.in_jail:
             if not roll[1]:
                 if self.gojfs != 0:
@@ -160,21 +164,21 @@ class Player():
                     self.exchange_money(-50)
                 self.turns_in_jail = 0
                 self.in_jail = False
-            # move player
-            self.move(roll[0])
-            # get property player is at
-            property = self.property_at(self.position)
-            # get the base type of action performed at this property
-            property.action(self)
-            # if player.money is negative, have player mrtg properties until money is not negative.
-            if self.money < 0 and self.assets() > 0:
-                while self.money < 0:
-                   self.mrtg_asset()
-            elif self.money < 0:
-                # bankruptcy
-                pass
-            if roll[1]:
-                self.num_of_doubles += 1
+        # move player
+        self.move(roll[0])
+        # get property player is at
+        property = self.game.property_at(self.position)
+        # get the base type of action performed at this property
+        property.action(self)
+        # if player.money is negative, have player mrtg properties until money is not negative.
+        if self.money < 0 and self.assets() > 0:
+            while self.money < 0:
+                self.mrtg_asset()
+        elif self.money < 0:
+            # bankruptcy
+            pass
+        if roll[1]:
+            self.num_of_doubles += 1
                 
 
             # @todo player can purchase houses/hotels at this point
@@ -231,7 +235,7 @@ class Property():
         self.rent_5 = int(rent_5)
         self.owner = None
         self.is_mrtg = False
-        self.rent = rent_0
+        self.rent = self.rent_0
         self.game = game
 
     def __repr__(self) -> str:
@@ -310,4 +314,4 @@ class Card():
         Card.id += 1
     
     def __repr__(self) -> str:
-        return f"'id': {self.id}, 'disc': {self.description}, 'deck': {self.deck}, 'func': {self.function}"
+        return f"'id': {self.id}, 'disc': {self.description}, 'deck': {self.deck}, 'func': {self.function}, 'flag': {self.flag}"
